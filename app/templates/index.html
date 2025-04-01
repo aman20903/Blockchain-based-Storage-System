@@ -1,0 +1,335 @@
+{% extends "base.html" %} 
+{% block content %}
+<style type="text/css">
+  :root {
+    --primary-color: #3498db;
+    --secondary-color: #2980b9;
+    --accent-color: #e74c3c;
+    --background-light: #f8f9fa;
+    --text-dark: #2c3e50;
+    --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --border-radius: 8px;
+  }
+
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f0f2f5;
+    color: var(--text-dark);
+  }
+
+  .main-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+  }
+
+  .page-title {
+    text-align: center;
+    margin-bottom: 2rem;
+    color: var(--primary-color);
+    font-weight: 600;
+  }
+
+  .dashboard-section {
+    background-color: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    padding: 2rem;
+    margin-bottom: 2rem;
+    transition: transform 0.3s ease;
+  }
+
+  .dashboard-section:hover {
+    transform: translateY(-5px);
+  }
+
+  .section-header {
+    padding: 0.75rem 1rem;
+    background-color: var(--primary-color);
+    color: white;
+    border-radius: var(--border-radius);
+    font-size: 1.25rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+
+  .form-control {
+    border-radius: var(--border-radius);
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    transition: all 0.3s ease;
+  }
+
+  .form-control:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+  }
+
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+
+  .form-label {
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    display: block;
+  }
+
+  .btn-upload {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: var(--border-radius);
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 100%;
+  }
+
+  .btn-upload:hover {
+    background-color: var(--secondary-color);
+  }
+
+  .file-card {
+    background-color: var(--background-light);
+    border-radius: var(--border-radius);
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-left: 4px solid var(--primary-color);
+    transition: all 0.3s ease;
+  }
+
+  .file-card:hover {
+    transform: translateX(5px);
+    box-shadow: var(--box-shadow);
+  }
+
+  .file-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.75rem;
+  }
+
+  .user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: var(--accent-color);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2rem;
+    margin-right: 1rem;
+  }
+
+  .user-name {
+    font-weight: 600;
+    font-size: 1.1rem;
+  }
+
+  .file-body {
+    padding: 0.5rem 0;
+  }
+
+  .file-name {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .download-link {
+    color: var(--primary-color);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    font-weight: 500;
+    transition: color 0.3s ease;
+  }
+
+  .download-link:hover {
+    color: var(--secondary-color);
+    text-decoration: none;
+  }
+
+  .download-link .icon {
+    margin-left: 0.5rem;
+  }
+
+  .file-input-wrapper {
+    position: relative;
+    overflow: hidden;
+    display: inline-block;
+    width: 100%;
+  }
+
+  .file-input-wrapper input[type=file] {
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+  }
+
+  .file-input-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem;
+    background-color: #e9ecef;
+    border: 1px dashed #ced4da;
+    border-radius: var(--border-radius);
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .file-input-label:hover {
+    background-color: #dee2e6;
+    border-color: var(--primary-color);
+  }
+
+  .selected-file {
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+    color: #6c757d;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 2rem;
+    color: #6c757d;
+  }
+
+  .empty-state svg {
+    margin-bottom: 1rem;
+    opacity: 0.5;
+  }
+
+  @media (max-width: 768px) {
+    .dashboard-section {
+      padding: 1.5rem;
+    }
+  }
+</style>
+
+<div class="main-container">
+  <h1 class="page-title">Blockchain FileStore</h1>
+
+  <div class="row">
+    <div class="col-md-5">
+      <div class="dashboard-section">
+        <div class="section-header">
+          Upload New File
+        </div>
+        <form action="/submit" method="POST" enctype="multipart/form-data">
+          <div class="form-group">
+            <label class="form-label">User Name</label>
+            <input
+              type="text"
+              class="form-control"
+              name="user"
+              placeholder="Enter your name"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Select File</label>
+            <div class="file-input-wrapper">
+              <div class="file-input-label">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="17 8 12 3 7 8"></polyline>
+                  <line x1="12" y1="3" x2="12" y2="15"></line>
+                </svg>
+                <span class="ml-2">Choose a file</span>
+              </div>
+              <input
+                type="file"
+                id="fileUpld"
+                name="v_file"
+                accept=".*"
+                onchange="updateFileName(this)"
+                required
+              />
+            </div>
+            <div class="selected-file" id="selectedFileName">No file selected</div>
+          </div>
+          
+          <button type="submit" class="btn-upload">
+            Upload to Blockchain
+          </button>
+        </form>
+      </div>
+
+      <div class="dashboard-section">
+        <div class="section-header">
+          Blockchain Stats
+        </div>
+        <div class="stats-container">
+          <div class="stat-item">
+            <div class="stat-label">Total Files</div>
+            <div class="stat-value">{{ request_tx|length }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-7">
+      <div class="dashboard-section">
+        <div class="section-header">
+          Uploaded Files
+        </div>
+        
+        {% if request_tx %}
+          {% for post in request_tx %}
+          <div class="file-card">
+            <div class="file-header">
+              <div class="user-avatar">
+                {{post.user[0]}}
+              </div>
+              <div class="user-name">{{post.user}}</div>
+            </div>
+            <div class="file-body">
+              <div class="file-name">
+                <span>{{post.v_file}}</span>
+                <a href="{{url_for('download_file',variable = post.v_file)}}" class="download-link">
+                  Download
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="7 10 12 15 17 10"></polyline>
+                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                  </svg>
+                </a>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        {% else %}
+          <div class="empty-state">
+            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+              <polyline points="10 9 9 9 8 9"></polyline>
+            </svg>
+            <p>No files have been uploaded yet</p>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function updateFileName(input) {
+    const fileName = input.files[0] ? input.files[0].name : 'No file selected';
+    document.getElementById('selectedFileName').textContent = fileName;
+  }
+</script>
+{% endblock %}
