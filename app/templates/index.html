@@ -9,12 +9,51 @@
     --text-dark: #2c3e50;
     --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     --border-radius: 8px;
+    --mining-color: #2ecc71;
   }
 
   body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: #f0f2f5;
     color: var(--text-dark);
+  }
+
+  /* Navbar styling */
+  .navbar {
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    background-color: white !important;
+  }
+
+  .navbar-brand {
+    font-weight: 700;
+    color: var(--primary-color) !important;
+    font-size: 1.4rem;
+  }
+
+  /* Mining button styling */
+  .mine-btn {
+    background-color: var(--mining-color);
+    color: white;
+    border-radius: 30px;
+    padding: 0.5rem 1.2rem;
+    display: inline-flex;
+    align-items: center;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    font-weight: 600;
+    box-shadow: 0 2px 4px rgba(46, 204, 113, 0.3);
+  }
+
+  .mine-btn:hover {
+    background-color: #27ae60;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(46, 204, 113, 0.4);
+    color: white;
+    text-decoration: none;
+  }
+
+  .mine-btn .icon {
+    margin-right: 0.5rem;
   }
 
   .main-container {
@@ -209,12 +248,78 @@
     opacity: 0.5;
   }
 
+  /* Custom navbar link with animation */
+  .navbar-nav .nav-item .nav-link {
+    position: relative;
+    padding: 0.5rem 1rem;
+    transition: all 0.3s ease;
+  }
+
+  /* Add a navbar right element for actions like mining */
+  .navbar-right {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+  }
+
+  /* Add pulse animation for the mining button */
+  @keyframes pulse {
+    0% {
+      box-shadow: 0 0 0 0 rgba(46, 204, 113, 0.7);
+    }
+    70% {
+      box-shadow: 0 0 0 10px rgba(46, 204, 113, 0);
+    }
+    100% {
+      box-shadow: 0 0 0 0 rgba(46, 204, 113, 0);
+    }
+  }
+
+  .pulse {
+    animation: pulse 2s infinite;
+  }
+
   @media (max-width: 768px) {
     .dashboard-section {
       padding: 1.5rem;
     }
   }
 </style>
+
+<!-- Custom Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px; vertical-align: text-bottom;">
+        <line x1="16" y1="8" x2="2" y2="8"></line>
+        <line x1="8" y1="16" x2="2" y2="16"></line>
+        <rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect>
+        <rect x="2" y="14" width="12" height="8" rx="2" ry="2"></rect>
+      </svg>
+      Blockchain
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item active">
+          <a class="nav-link" href="#">Home</a>
+        </li>
+      </ul>
+      <div class="navbar-right">
+        <a href="{{ node_address }}/mine" class="mine-btn pulse">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon">
+            <path d="M15 21H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+            <path d="M19 15V3"></path>
+            <path d="M15 7l4-4 4 4"></path>
+          </svg>
+          Request to Mine
+        </a>
+      </div>
+    </div>
+  </div>
+</nav>
 
 <div class="main-container">
   <h1 class="page-title">Blockchain FileStore</h1>
